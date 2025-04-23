@@ -25,6 +25,15 @@ app.post('/post',async (req,res)=>{
     res.send("Completed the task of creating an post endpoint");
 })
 
+app.put('/put/:oldname', async (req,res)=>{
+    const {oldname} = req.params;
+    const {name} = req.body;
+
+    const updatedUser = await testingModel.findOneAndUpdate({name:oldname},{name:name},{new:true});
+    console.log("the user was renamed successfully")
+    res.send(updatedUser);
+})
+
 app.listen(PORT,(req,res)=>{
     console.log(`The backend server is running on http://localhost:${PORT}/`)
 })
