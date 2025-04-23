@@ -10,8 +10,10 @@ app.use(express.urlencoded({extended: false}))
 
 connectdb();
 
-app.get('/get',(req,res)=>{
-    res.send("Completed the task of creating an get endpoint")
+app.get('/get',async (req,res)=>{
+    const {name} = req.body;
+    const findUser = await testingModel.find({name});
+    res.send(findUser)
 })
 
 app.post('/post',async (req,res)=>{
@@ -21,6 +23,15 @@ app.post('/post',async (req,res)=>{
     res.send(createuser);
 
     res.send("Completed the task of creating an post endpoint");
+})
+
+app.put('/put/:oldname', async (req,res)=>{
+    const {oldname} = req.params;
+    const {name} = req.body;
+
+    const updatedUser = await testingModel.findOneAndUpdate({name:oldname},{name:name},{new:true});
+    console.log("the user was renamed successfully")
+    res.send(updatedUser);
 })
 
 app.listen(PORT,(req,res)=>{
