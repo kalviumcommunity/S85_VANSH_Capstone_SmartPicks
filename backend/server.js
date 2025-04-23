@@ -10,6 +10,10 @@ app.use(express.urlencoded({extended: false}))
 
 connectdb();
 
+app.get('/',(req,res)=>{
+    res.send("This is my home page and if this text is shown in browser that means my server is working correctly and it is deployed as well")
+})
+
 app.get('/get',async (req,res)=>{
     const {name} = req.body;
     const findUser = await testingModel.find({name});
