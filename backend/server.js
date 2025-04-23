@@ -10,8 +10,10 @@ app.use(express.urlencoded({extended: false}))
 
 connectdb();
 
-app.get('/get',(req,res)=>{
-    res.send("Completed the task of creating an get endpoint")
+app.get('/get',async (req,res)=>{
+    const {name} = req.body;
+    const findUser = await testingModel.find({name});
+    res.send(findUser)
 })
 
 app.post('/post',async (req,res)=>{
