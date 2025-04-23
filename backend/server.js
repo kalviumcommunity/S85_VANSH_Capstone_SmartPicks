@@ -10,7 +10,11 @@ app.use(express.urlencoded({extended: false}))
 
 connectdb();
 
-
+app.get('/get',async (req,res)=>{
+    const {name} = req.body;
+    const findUser = await testingModel.find({name});
+    res.send(findUser)
+})
 
 app.post('/post',async (req,res)=>{
     const {name,email,password} = req.body;
