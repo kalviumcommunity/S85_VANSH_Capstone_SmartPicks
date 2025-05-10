@@ -3,7 +3,11 @@ const connectdb = require("./db/db");
 const app = express();
 const mongoose = require('mongoose');
 const testingModel = require('./model/user');
+const product = require('./model/startup/product');
+const startup = require('./model/startup/startup');
+const controller = require('./controller/product.controller');
 PORT = 3000
+
 
 app.use(express.json())
 app.use(express.urlencoded({extended: false}))
@@ -38,8 +42,6 @@ app.put('/put/:oldname', async (req,res)=>{
     res.send(updatedUser);
 })
 
-// new task of recreating CRUD operation 
-
 app.get('/read',async (req,res)=>{
     const {name} = req.body;
     const findUser = await testingModel.find({name});
@@ -52,7 +54,7 @@ app.post('/create',async (req,res)=>{
     const createuser = await testingModel.create({name , email , password});
     res.send(createuser);
 
-    res.send("Completed the task of creating an post endpoint");
+    console.log("Completed the task of creating an post endpoint");
 })
 
 app.put('/update/:oldname', async (req,res)=>{
@@ -72,6 +74,8 @@ app.delete('/delete', async (req,res)=>{
     res.send(deleteUser);
 
 })
+
+app.use('/',controller);
 
 
 app.listen(PORT,(req,res)=>{
