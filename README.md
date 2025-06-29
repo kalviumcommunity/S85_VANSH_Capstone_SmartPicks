@@ -1,88 +1,107 @@
-### **📚 SmartPicks**  
+# 🌐 [SmartPicks – Live Demo](https://vansh-smartpicks.netlify.app/)
 
-## 🚀 Project Overview  
-*SmartPicks* is an innovative platform designed to empower startups by providing a space where high-quality products are showcased with **clear, compelling Unique Selling Propositions (USPs)**.  
+### 📚 **SmartPicks**
 
-Startups can list their products, emphasizing **what makes them stand out**—whether it's **better quality, lower price, or unique features**—while users can easily compare these USPs to make informed purchasing decisions.  
-
-By offering this marketplace, *SmartPicks* helps startups **gain visibility and drive sales**, while users benefit from **discovering the best products** at the best prices.  
+**Empowering startups. Simplifying smart shopping.**
 
 ---
 
-## 🔥 Key Features  
+## ✨ Project Overview
 
-✅ **Product Listings with USPs** – Startups can create detailed product listings, highlighting the **unique advantages** of their offerings, such as superior quality, affordability, or innovative features.  
-✅ **User Reviews and Ratings** – Users can **rate and review** products to help others make informed choices.  
-✅ **Advanced Search and Filters** – Users can **search products by category, price, and features** for easy discovery.  
-✅ **Startup Profiles** – Each startup gets a **dedicated profile** to showcase their mission, vision, and product range.  
-✅ **Special Offers and Discounts** – Users can access **exclusive deals and discounts** from emerging startups.  
-✅ **Analytics for Startups** – Startups receive **valuable insights** on product performance, including views, clicks, and conversions.  
+**SmartPicks** is a dynamic platform designed to **empower startups** by giving them a space to showcase their products with clear, compelling **Unique Selling Propositions (USPs)**.
 
----
+It simplifies product discovery for users by making it easy to **compare USPs**—whether it's superior quality, competitive pricing, or unique features.
 
-## 🛠 Tech Stack  
-
-| Component  | Technology  |  
-|------------|-------------|  
-| **Frontend**  | React.js, Next.js  |  
-| **Backend**  | Node.js, Express.js  |  
-| **Database**  | MongoDB or Firebase  |  
-| **Search & Filter**  | ElasticSearch  |  
-| **Authentication**  | JWT, OAuth  |  
-| **Analytics**  | Google Analytics, custom tracking with Node.js  |  
+🔹 **For startups** – it’s visibility and performance insights.
+🔹 **For users** – it’s smarter, faster purchasing decisions.
 
 ---
 
-## 📅 Capstone Day-by-Day Plan  
+## 🌟 Key Features
 
-| Day | Task |  
-|----|------|  
-| **Day 1** | Finalize project idea, create initial wireframes in Figma, and set up the GitHub repository. |  
-| **Day 2** | Develop a **low-fidelity prototype** in Figma and document user flow. |  
-| **Day 3** | Set up the **frontend structure** using React.js and Next.js. |  
-| **Day 4** | Implement **authentication system** (Signup/Login using JWT or OAuth). |  
-| **Day 5** | Develop **backend APIs** using Node.js and Express.js. |  
-| **Day 6** | Connect **MongoDB/Firebase database** and set up CRUD operations for product listings. |  
-| **Day 7** | Implement **product search and filtering** using ElasticSearch. |  
-| **Day 8** | Work on the **startup profile pages** and implement user reviews/ratings. |  
-| **Day 9** | Add **discounts/offers** functionality for special deals. |  
-| **Day 10** | Set up **basic analytics** to track product performance. |  
-| **Day 11** | Test all features, fix bugs, and ensure smooth user experience. |  
-| **Day 12** | Deploy the project using **Vercel (Frontend) and Render/Heroku (Backend)**. |  
-| **Day 13** | Conduct user testing and gather feedback for final improvements. |  
-| **Day 14** | Prepare final **capstone presentation** and documentation. |  
+* ✅ **Detailed Product Listings with USPs**
+  Clearly highlight what makes each product stand out—quality, price, or innovation.
 
----
+* ✅ **User Reviews & Ratings**
+  Crowdsource feedback to build trust and drive better choices.
 
-## 🎯 Why This Project?  
-I’ve chosen to build *SmartPicks* because it offers a **unique opportunity** to support both **startups and users** in a meaningful way.  
+* ✅ **Advanced Search & Filtering**
+  Narrow down results by category, price range, or feature tags.
 
-- Startups gain **exposure and visibility** for their products.  
-- Users benefit from a **clear and easy-to-use** platform for product discovery.  
-- The project challenges me to apply **full-stack development** skills, including UI/UX design, backend API creation, database management, and search optimization.  
+* ✅ **Startup Profiles**
+  Give each brand a voice with mission statements, portfolios, and social presence.
+
+* ✅ **Exclusive Offers & Deals**
+  Provide users with startup-led discounts and early-bird perks.
+
+* ✅ **Performance Analytics for Startups**
+  Gain insights on product views, clicks, and conversions.
 
 ---
 
-## 📌 Getting Started  
+## 🛠 Tech Stack
 
-### 1️⃣ Clone the Repository  
-```sh
-git clone https://github.com/yourusername/smartpicks.git
-cd smartpicks
+| Layer         | Technology                                |
+| ------------- | ----------------------------------------- |
+| **Frontend**  | React.js, Next.js                         |
+| **Backend**   | Node.js, Express.js                       |
+| **Database**  | MongoDB / Firebase                        |
+| **Search**    | ElasticSearch                             |
+| **Auth**      | JWT, OAuth                                |
+| **Analytics** | Google Analytics, Custom Node.js Tracking |
+
+---
+
+## 📇 Capstone Timeline – Day-by-Day Breakdown
+
+| Day    | Task Description                                       |
+| ------ | ------------------------------------------------------ |
+| Day 1  | Idea finalization, wireframes (Figma), GitHub setup    |
+| Day 2  | Low-fidelity prototypes + user flow documentation      |
+| Day 3  | Frontend scaffolding (React + Next.js)                 |
+| Day 4  | Authentication (JWT/OAuth)                             |
+| Day 5  | Backend API development (Express.js)                   |
+| Day 6  | Connect database + implement CRUD for products         |
+| Day 7  | Implement ElasticSearch filtering                      |
+| Day 8  | Startup profiles + user reviews                        |
+| Day 9  | Discount/offer system                                  |
+| Day 10 | Basic analytics setup                                  |
+| Day 11 | Testing & bug fixes                                    |
+| Day 12 | Deployment: Vercel (frontend), Render/Heroku (backend) |
+| Day 13 | User testing + feedback                                |
+| Day 14 | Final presentation + documentation                     |
+
+---
+
+## 🌟 Why SmartPicks?
+
+This project stands at the intersection of **tech and entrepreneurship**:
+
+* 🧠 **Startup Enablement** – A discovery engine for promising new products.
+* 🛒 **Smarter Shopping** – Users choose products based on what actually matters.
+* 👨‍💻 **Full-Stack Challenge** – Frontend, backend, database, authentication, analytics, and UX all in one.
+
+---
+
+## 📂 Getting Started
+
+### 🔁 Clone the Repository
+
+```bash
+git clone https://github.com/kalviumcommunity/S85_VANSH_Capstone_SmartPicks.git
+cd S85_VANSH_Capstone_SmartPicks
 ```
 
-### 2️⃣ Install Dependencies  
-```sh
+### 📦 Install Frontend Dependencies
+
+```bash
 npm install
-```
-
-### 3️⃣ Start the Development Server  
-```sh
 npm run dev
 ```
 
-### 4️⃣ Backend Setup  
-```sh
+### ⚙️ Set Up Backend
+
+```bash
 cd backend
 npm install
 npm start
@@ -90,16 +109,22 @@ npm start
 
 ---
 
-## 🤝 Contributing  
-We welcome contributions! Feel free to **fork the repository** and submit a pull request with your improvements.  
+## 🤝 Contributing
+
+Contributions are welcome!
+If you'd like to help improve *SmartPicks*, fork the repo, make your changes, and submit a pull request.
 
 ---
 
-## 📬 Contact  
-For any questions or suggestions, reach out at **vanshthapar.professional@gmail.com**  
+## 📬 Contact
+
+Have suggestions or questions?
+📧 Email: **[vanshthapar.professional@gmail.com](mailto:vanshthapar.professional@gmail.com)**
 
 ---
 
-### 🌟 If you like this project, don’t forget to **star ⭐ the repository!**  
+## ⭐ Like the Project?
+
+Give it a star ⭐ on GitHub and help others discover it too!
 
 ---
