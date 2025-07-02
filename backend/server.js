@@ -1,83 +1,20 @@
-const express = require("express");
-const connectdb = require("./db/db");
+const express = require('express');
 const app = express();
-const mongoose = require('mongoose');
-const testingModel = require('./model/user');
-const product = require('./model/startup/product');
-const startup = require('./model/startup/startup');
-const controller = require('./controller/product.controller');
-PORT = 3000
+const startupRoute = require('./routes/startup')
+const connectdb = require('./config/db')
+const cors = require('cors');
+app.use(cors());
 
-
-app.use(express.json())
-app.use(express.urlencoded({extended: false}))
+app.use(express.json());
+app.use(express.urlencoded({extended:true}))
 
 connectdb();
 
-app.get('/',(req,res)=>{
-    res.send("This is my home page and if this text is shown in browser that means my server is working correctly and it is deployed as well")
-})
+// router of startup
+app.use('/startups',startupRoute)
 
-app.get('/get',async (req,res)=>{
-    const {name} = req.body;
-    const findUser = await testingModel.find({name});
-    res.send(findUser)
-})
+const port = process.env.PORT || 5000;
 
-app.post('/post',async (req,res)=>{
-    const {name,email,password} = req.body;
-
-    const createuser = await testingModel.create({name , email , password});
-    res.send(createuser);
-
-    res.send("Completed the task of creating an post endpoint");
-})
-
-app.put('/put/:oldname', async (req,res)=>{
-    const {oldname} = req.params;
-    const {name} = req.body;
-
-    const updatedUser = await testingModel.findOneAndUpdate({name:oldname},{name:name},{new:true});
-    console.log("the user was renamed successfully")
-    res.send(updatedUser);
-})
-
-app.get('/read',async (req,res)=>{
-    const {name} = req.body;
-    const findUser = await testingModel.find({name});
-    res.send(findUser)
-})
-
-app.post('/create',async (req,res)=>{
-    const {name,email,password} = req.body;
-
-    const createuser = await testingModel.create({name , email , password});
-    res.send(createuser);
-
-    console.log("Completed the task of creating an post endpoint");
-})
-
-app.put('/update/:oldname', async (req,res)=>{
-    const {oldname} = req.params;
-    const {name} = req.body;
-
-    const updatedUser = await testingModel.findOneAndUpdate({name:oldname},{name:name},{new:true});
-    console.log("the user was renamed successfully")
-    res.send(updatedUser);
-})
-
-app.delete('/delete', async (req,res)=>{
-    const {name} = req.body;
-
-    const deleteUser = await testingModel.findOneAndDelete({name:name});
-    console.log("The User was deleted successfully");
-    res.send(deleteUser);
-
-})
-
-app.use('/',controller);
-
-
-app.listen(PORT,(req,res)=>{
-    console.log(`The backend server is running on http://localhost:${PORT}/`)
+app.listen(port,()=>{
+    console.log(`The server started ${port}`);
 })

@@ -1,28 +1,11 @@
 {
-  "name": "backend",
-  "version": "1.0.0",
-  "description": "this is the backend of my project",
-  "main": "server.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/kalviumcommunity/S85_VANSH_Capstone_SmartPicks.git"
-  },
-  "author": "Vansh Thapar",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/kalviumcommunity/S85_VANSH_Capstone_SmartPicks/issues"
-  },
-  "homepage": "https://github.com/kalviumcommunity/S85_VANSH_Capstone_SmartPicks#readme",
   "dependencies": {
     "body-parser": "^2.2.0",
     "cors": "^2.8.5",
-    "dotenv": "^16.5.0",
+    "dotenv": "^17.0.1",
     "express": "^5.1.0",
-    "mongoose": "^8.13.2",
-    "multer": "^1.4.5-lts.2",
-    "nodemon": "^3.1.9"
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.16.1",
+    "nodemon": "^3.1.10"
   }
 }
