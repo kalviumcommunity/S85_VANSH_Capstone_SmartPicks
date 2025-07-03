@@ -1,6 +1,7 @@
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass, faCartShopping, faUser } from '@fortawesome/free-solid-svg-icons';
+import { Link } from 'react-router-dom';
 
 const Navbar = () => {
   return (
@@ -16,11 +17,11 @@ const Navbar = () => {
 
         {/* Navigation Links - Center */}
         <ul className="hidden md:flex gap-8 text-white font-medium text-sm" style={{fontFamily: 'poppins'}} >
-          <li className="cursor-pointer hover:scale-125 transition-all duration-200 "> <a href="/Discover">Discover</a></li>
-          <li className="cursor-pointer hover:scale-125 transition-all duration-200 "> <a href="/Products"> Products</a></li>
-          <li className="cursor-pointer hover:scale-125 transition-all duration-200 "> <a href="/Startups"> Startups</a></li>
-          <li className="cursor-pointer hover:scale-125 transition-all duration-200 "><a href="/About">About</a></li>
-          <li className="cursor-pointer hover:scale-125 transition-all duration-200 "><a href="/Contact">Contact</a></li>
+          <li className="cursor-pointer hover:scale-125 transition-all duration-200 "> <Link to="/Discover">Discover</Link></li>
+          <li className="cursor-pointer hover:scale-125 transition-all duration-200 "> <Link to="/Products"> Products</Link></li>
+          <li className="cursor-pointer hover:scale-125 transition-all duration-200 "> <Link to="/Startups"> Startups</Link></li>
+          <li className="cursor-pointer hover:scale-125 transition-all duration-200 "><Link to="/About">About</Link></li>
+          <li className="cursor-pointer hover:scale-125 transition-all duration-200 "><Link to="/Contact">Contact</Link></li>
         </ul>
 
         {/* Right Side - Search + Icons */}
@@ -44,10 +45,12 @@ const Navbar = () => {
             />
 
           {/* Profile Icon */}
+          <Link to="/profile" >
           <FontAwesomeIcon
             icon={faUser}
             className="text-white text-lg cursor-pointer"
-          />
+            />
+            </Link>
         </div>
       </div>
     </nav>
