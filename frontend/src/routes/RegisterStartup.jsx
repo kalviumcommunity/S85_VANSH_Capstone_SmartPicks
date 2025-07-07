@@ -14,6 +14,16 @@ const RegisterStartup = () => {
     reset,
   } = useForm();
 
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
+  const cloudinaryCloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
+  const cloudinaryUploadPreset = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
+  if (!backendUrl) {
+    throw new Error('VITE_BACKEND_URL is not set. Please check your environment variables.');
+  }
+  if (!cloudinaryCloudName || !cloudinaryUploadPreset) {
+    throw new Error('Cloudinary environment variables are not set. Please check your .env file.');
+  }
+
   const onSubmit = async (data) => {
     try {
       const logoFile = data.StartupLogo[0];
@@ -24,10 +34,10 @@ const RegisterStartup = () => {
 
       const cloudinaryData = new FormData();
       cloudinaryData.append('file', logoFile);
-      cloudinaryData.append('upload_preset', import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET);
+      cloudinaryData.append('upload_preset', cloudinaryUploadPreset);
 
       const cloudinaryRes = await axios.post(
-        `https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUDINARY_CLOUD_NAME}/image/upload`,
+        `https://api.cloudinary.com/v1_1/${cloudinaryCloudName}/image/upload`,
         cloudinaryData
       );
 
@@ -39,8 +49,9 @@ const RegisterStartup = () => {
       };
 
       const response = await axios.post(
-        `${import.meta.env.VITE_BACKEND_URL}/startups/register`,
-        startupData
+        `${backendUrl}/startups/register`,
+        startupData,
+        { headers: { } }
       );
 
       // Save token for later use (e.g., localStorage or context)

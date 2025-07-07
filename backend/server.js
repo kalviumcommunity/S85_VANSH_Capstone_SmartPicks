@@ -6,7 +6,7 @@ const cors = require('cors');
 const addProductRoute = require('./routes/addproduct');
 const loginStartupRoute = require('./routes/loginstartup');
 app.use(cors({
-  origin: '*',
+  origin: 'https://vansh-smartpicks.netlify.app',
   credentials: true
 }));
 

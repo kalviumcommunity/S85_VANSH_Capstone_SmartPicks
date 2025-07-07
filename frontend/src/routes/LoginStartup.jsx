@@ -6,7 +6,14 @@ import { GoogleLogin, GoogleOAuthProvider } from '@react-oauth/google';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 
-const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID || 'YOUR_GOOGLE_CLIENT_ID';
+const backendUrl = import.meta.env.VITE_BACKEND_URL;
+const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+if (!backendUrl) {
+  throw new Error('VITE_BACKEND_URL is not set. Please check your environment variables.');
+}
+if (!googleClientId) {
+  throw new Error('VITE_GOOGLE_CLIENT_ID is not set. Please check your environment variables.');
+}
 
 const LoginStartup = () => {
   const { register, handleSubmit, formState: { errors }, setError } = useForm();
@@ -16,7 +23,7 @@ const LoginStartup = () => {
   const onSubmit = async (data) => {
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_BACKEND_URL}/startups/login`,
+        `${backendUrl}/startups/login`,
         data
       );
       localStorage.setItem('startupToken', response.data.token);
@@ -30,7 +37,7 @@ const LoginStartup = () => {
   const handleGoogleSuccess = async (credentialResponse) => {
     try {
       const backendRes = await axios.post(
-        `${import.meta.env.VITE_BACKEND_URL}/startups/google-login`,
+        `${backendUrl}/startups/google-login`,
         { credential: credentialResponse.credential }
       );
       localStorage.setItem('startupToken', backendRes.data.token);
@@ -46,7 +53,7 @@ const LoginStartup = () => {
   };
 
   return (
-    <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
+    <GoogleOAuthProvider clientId={googleClientId}>
       <div className="relative min-h-screen w-full overflow-hidden flex items-center justify-center">
         {/* Animated Background */}
         <motion.div
