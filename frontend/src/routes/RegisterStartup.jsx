@@ -17,11 +17,21 @@ const RegisterStartup = () => {
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
   const cloudinaryCloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
   const cloudinaryUploadPreset = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
-  if (!backendUrl) {
-    throw new Error('VITE_BACKEND_URL is not set. Please check your environment variables.');
-  }
-  if (!cloudinaryCloudName || !cloudinaryUploadPreset) {
-    throw new Error('Cloudinary environment variables are not set. Please check your .env file.');
+  console.log('DEBUG: VITE_BACKEND_URL =', backendUrl);
+  console.log('DEBUG: VITE_CLOUDINARY_CLOUD_NAME =', cloudinaryCloudName);
+  console.log('DEBUG: VITE_CLOUDINARY_UPLOAD_PRESET =', cloudinaryUploadPreset);
+
+  if (!backendUrl || !cloudinaryCloudName || !cloudinaryUploadPreset) {
+    return (
+      <div style={{color: 'red', fontWeight: 'bold', padding: 40}}>
+        ERROR: One or more required environment variables are not set.<br/>
+        backendUrl: {String(backendUrl)}<br/>
+        cloudinaryCloudName: {String(cloudinaryCloudName)}<br/>
+        cloudinaryUploadPreset: {String(cloudinaryUploadPreset)}<br/>
+        Please check your .env file and Netlify environment variables.<br/>
+        (This message is visible in production if the build is missing these variables.)
+      </div>
+    );
   }
 
   const onSubmit = async (data) => {
