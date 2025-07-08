@@ -6,6 +6,7 @@ const generateToken = require('../middleware/generateToken');
 const { OAuth2Client } = require('google-auth-library');
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID || 'YOUR_GOOGLE_CLIENT_ID';
 const googleClient = new OAuth2Client(GOOGLE_CLIENT_ID);
+const verifyToken = require('../middleware/verifyToken');
 
 router.post('/login', async (req, res) => {
   const { StartupEmail, StartupPassword } = req.body;
@@ -101,6 +102,24 @@ router.post('/google-login', async (req, res) => {
   } catch (err) {
     console.error('Google login error:', err);
     res.status(401).json({ error: 'Invalid Google token.' });
+  }
+});
+
+// Logout Route
+router.post('/logout', verifyToken, async (req, res) => {
+  try {
+    // In a more complex system, you might want to:
+    // 1. Add the token to a blacklist
+    // 2. Update user's last logout time
+    // 3. Log the logout event
+    
+    res.json({ 
+      message: 'Logout successful',
+      success: true 
+    });
+  } catch (err) {
+    console.error('Logout error:', err);
+    res.status(500).json({ error: 'Logout failed' });
   }
 });
 

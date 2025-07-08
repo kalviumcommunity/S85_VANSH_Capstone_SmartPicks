@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass, faCartShopping, faUser, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios'; // Added axios import
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -25,8 +26,23 @@ const Navbar = () => {
     };
   }, []);
   
-  const handleLogout = () => {
+  const handleLogout = async () => {
     console.log('Navbar: Logout clicked');
+    
+    try {
+      // Call backend logout endpoint
+      const token = localStorage.getItem('startupToken');
+      if (token) {
+        await axios.post(
+          `${import.meta.env.VITE_BACKEND_URL || 'https://s85-vansh-capstone-smartpicks.onrender.com'}/startups/logout`,
+          {},
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+      }
+    } catch (error) {
+      console.log('Backend logout failed, continuing with client-side logout:', error);
+    }
+    
     // Clear the startup token
     localStorage.removeItem('startupToken');
     setIsLoggedIn(false);
