@@ -1,20 +1,38 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass, faCartShopping, faUser, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 import { Link, useNavigate } from 'react-router-dom';
 
 const Navbar = () => {
   const navigate = useNavigate();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  
+  // Check login status on component mount and when localStorage changes
+  useEffect(() => {
+    const checkLoginStatus = () => {
+      const token = localStorage.getItem('startupToken');
+      setIsLoggedIn(!!token);
+      console.log('Navbar: Login status checked, isLoggedIn:', !!token);
+    };
+    
+    checkLoginStatus();
+    
+    // Listen for storage changes
+    window.addEventListener('storage', checkLoginStatus);
+    
+    return () => {
+      window.removeEventListener('storage', checkLoginStatus);
+    };
+  }, []);
   
   const handleLogout = () => {
+    console.log('Navbar: Logout clicked');
     // Clear the startup token
     localStorage.removeItem('startupToken');
+    setIsLoggedIn(false);
     // Redirect to login page
     navigate('/login');
   };
-
-  // Check if user is logged in
-  const isLoggedIn = localStorage.getItem('startupToken');
 
   return (
     <nav className="bg-teal-900 w-full py-2.5 shadow-sm border-b-1 border-b-white">
@@ -64,18 +82,18 @@ const Navbar = () => {
             />
             </Link>
 
-          {/* Logout Button - Only show if logged in */}
+          {/* Logout Button - Show when logged in */}
           {isLoggedIn && (
             <button
               onClick={handleLogout}
-              className="flex items-center gap-2 text-white hover:text-red-300 transition-colors duration-200"
+              className="flex items-center gap-2 px-3 py-1 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-all duration-200 font-medium"
               title="Logout"
             >
               <FontAwesomeIcon
                 icon={faSignOutAlt}
-                className="text-white text-lg cursor-pointer hover:text-red-300"
+                className="text-white text-sm"
               />
-              <span className="hidden md:inline text-sm font-medium">Logout</span>
+              <span className="text-sm font-medium">Logout</span>
             </button>
           )}
         </div>
