@@ -24,27 +24,40 @@ const RegisterStartup = () => {
 
   const onSubmit = async (data) => {
     try {
+      console.log('DEBUG: Starting registration process...');
+      console.log('DEBUG: Form data:', data);
+      
       const logoFile = data.StartupLogo[0];
       if (!logoFile) {
+        console.log('DEBUG: No logo file found');
         setError('StartupLogo', { message: 'Logo file is required' });
         return;
       }
+      console.log('DEBUG: Logo file found:', logoFile.name);
 
+      console.log('DEBUG: Starting Cloudinary upload...');
       const cloudinaryData = new FormData();
       cloudinaryData.append('file', logoFile);
       cloudinaryData.append('upload_preset', cloudinaryUploadPreset);
+
+      console.log('DEBUG: Cloudinary URL:', `https://api.cloudinary.com/v1_1/${cloudinaryCloudName}/image/upload`);
+      console.log('DEBUG: Upload preset:', cloudinaryUploadPreset);
 
       const cloudinaryRes = await axios.post(
         `https://api.cloudinary.com/v1_1/${cloudinaryCloudName}/image/upload`,
         cloudinaryData
       );
 
+      console.log('DEBUG: Cloudinary upload successful:', cloudinaryRes.data);
       const logoUrl = cloudinaryRes.data.secure_url;
 
       const startupData = {
         ...data,
         StartupLogo: logoUrl,
       };
+      
+      console.log('DEBUG: Startup data to send:', startupData);
+      console.log('DEBUG: Backend URL for registration:', `${backendUrl}/startups/register`);
 
       const response = await axios.post(
         `${backendUrl}/startups/register`,
@@ -52,6 +65,7 @@ const RegisterStartup = () => {
         { headers: { } } // Explicitly send no Authorization header
       );
 
+      console.log('DEBUG: Backend registration successful:', response.data);
       // Save token for later use (e.g., localStorage or context)
       localStorage.setItem('startupToken', response.data.token);
 
@@ -59,6 +73,9 @@ const RegisterStartup = () => {
       alert('Startup registered successfully!');
       reset();
     } catch (error) {
+      console.error('DEBUG: Registration error details:', error);
+      console.error('DEBUG: Error response:', error.response?.data);
+      console.error('DEBUG: Error status:', error.response?.status);
       console.error('Error submitting form:', error);
       alert('Failed to register startup. Please try again.');
     }
