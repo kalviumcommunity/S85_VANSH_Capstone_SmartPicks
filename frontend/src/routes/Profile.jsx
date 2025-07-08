@@ -4,7 +4,7 @@ import { jwtDecode } from 'jwt-decode';
 import { motion, AnimatePresence } from 'framer-motion';
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus, faList, faCogs, faBell, faChartPie } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faList, faCogs, faBell, faChartPie, faSearch, faEdit, faTimes } from '@fortawesome/free-solid-svg-icons';
 
 const sidebarLinks = [
   { label: 'Add Product', icon: faPlus, action: () => window.location.href = '/addproduct' },
@@ -20,8 +20,78 @@ const Profile = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [deleting, setDeleting] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [editingProduct, setEditingProduct] = useState(null);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [editForm, setEditForm] = useState({});
+  const [saving, setSaving] = useState(false);
   const productsSectionRef = React.useRef(null);
 
+  // Filter products based on search term
+  const filteredProducts = products.filter(product =>
+    product.productName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    product.productCategory.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    product.description.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  // Handle edit form changes
+  const handleEditFormChange = (field, value) => {
+    setEditForm(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
+
+  // Handle edit product
+  const handleEditProduct = (product) => {
+    setEditingProduct(product);
+    setEditForm({
+      productName: product.productName,
+      description: product.description,
+      productCategory: product.productCategory,
+      stocks: product.stocks,
+      color: product.color || '',
+      usp: product.usp || ''
+    });
+    setShowEditModal(true);
+  };
+
+  // Handle save edited product
+  const handleSaveEdit = async () => {
+    if (!editingProduct) return;
+    
+    setSaving(true);
+    try {
+      const token = localStorage.getItem('startupToken');
+      const response = await axios.put(
+        `${import.meta.env.VITE_BACKEND_URL}/products/edit/${editingProduct._id}`,
+        editForm,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      
+      // Update the product in the local state
+      setProducts(prev => prev.map(p => 
+        p._id === editingProduct._id ? { ...p, ...editForm } : p
+      ));
+      
+      setShowEditModal(false);
+      setEditingProduct(null);
+      setEditForm({});
+      alert('Product updated successfully!');
+    } catch (err) {
+      console.error('Error updating product:', err);
+      alert('Failed to update product. Please try again.');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  // Handle cancel edit
+  const handleCancelEdit = () => {
+    setShowEditModal(false);
+    setEditingProduct(null);
+    setEditForm({});
+  };
   
   useEffect(() => {
     const fetchData = async () => {
@@ -220,51 +290,190 @@ const Profile = () => {
             </ResponsiveContainer>
           </div>
 
-          {/* Product List */}
-          <motion.h2 ref={productsSectionRef} className="text-2xl font-bold mb-6 mt-10 text-cyan-200" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
-            Your Products
-          </motion.h2>
-          {products.length === 0 ? (
-            <motion.div className="text-center text-white/60" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-              No products found for your startup.
-            </motion.div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {products.map((product, idx) => (
-                <motion.div
-                  key={product._id}
-                  className="rounded-2xl bg-[#1a2236] p-6 flex flex-col md:flex-row items-center gap-6 shadow-lg border border-cyan-400/10"
-                  whileHover={{ scale: 1.03 }}
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.1 + idx * 0.08, duration: 0.5, type: 'spring' }}
-                >
-                  <img src={product.productImage} alt={product.productName} className="w-24 h-24 object-cover rounded-xl border-2 border-cyan-300 shadow-md" />
-                  <div className="flex-1">
-                    <h3 className="text-lg font-bold text-cyan-200 mb-1">{product.productName}</h3>
-                    <p className="text-white/80 mb-2">{product.description}</p>
-                    <div className="flex flex-wrap gap-2 mt-2">
-                      <span className="bg-cyan-400/30 px-3 py-1 rounded-full text-xs">Category: {product.productCategory}</span>
-                      <span className="bg-cyan-200/30 px-3 py-1 rounded-full text-xs">Stocks: {product.stocks}</span>
-                      {product.color && <span className="bg-blue-400/30 px-3 py-1 rounded-full text-xs">Color: {product.color}</span>}
-                      {product.usp && <span className="bg-blue-200/30 px-3 py-1 rounded-full text-xs">USP: {product.usp}</span>}
-                    </div>
-                  </div>
-                  <motion.button
-                    whileHover={{ scale: 1.1, backgroundColor: '#22d3ee', color: '#fff' }}
-                    whileTap={{ scale: 0.95 }}
-                    className="ml-2 px-5 py-2 rounded-xl font-bold text-cyan-200 border-2 border-cyan-400 bg-[#232946] shadow-lg transition-all duration-200 z-20"
-                    disabled={deleting === product._id}
-                    onClick={() => handleDelete(product._id)}
-                  >
-                    {deleting === product._id ? 'Deleting...' : 'Delete'}
-                  </motion.button>
-                </motion.div>
-              ))}
+          {/* Product List with Search */}
+          <motion.div ref={productsSectionRef} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
+            <div className="flex flex-col md:flex-row justify-between items-center mb-6">
+              <h2 className="text-2xl font-bold text-cyan-200">Your Products</h2>
+              
+              {/* Search Bar */}
+              <div className="relative mt-4 md:mt-0">
+                <div className="flex items-center bg-[#1a2236] rounded-xl px-4 py-2 border border-cyan-400/20">
+                  <FontAwesomeIcon icon={faSearch} className="text-cyan-300 mr-3" />
+                  <input
+                    type="text"
+                    placeholder="Search products..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="bg-transparent outline-none text-white placeholder-white/60 w-64"
+                  />
+                </div>
+              </div>
             </div>
-          )}
+
+            {filteredProducts.length === 0 ? (
+              <motion.div className="text-center text-white/60 py-8" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                {searchTerm ? 'No products found matching your search.' : 'No products found for your startup.'}
+              </motion.div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                {filteredProducts.map((product, idx) => (
+                  <motion.div
+                    key={product._id}
+                    className="rounded-2xl bg-[#1a2236] p-6 flex flex-col md:flex-row items-center gap-6 shadow-lg border border-cyan-400/10"
+                    whileHover={{ scale: 1.03 }}
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.1 + idx * 0.08, duration: 0.5, type: 'spring' }}
+                  >
+                    <img src={product.productImage} alt={product.productName} className="w-24 h-24 object-cover rounded-xl border-2 border-cyan-300 shadow-md" />
+                    <div className="flex-1">
+                      <h3 className="text-lg font-bold text-cyan-200 mb-1">{product.productName}</h3>
+                      <p className="text-white/80 mb-2">{product.description}</p>
+                      <div className="flex flex-wrap gap-2 mt-2">
+                        <span className="bg-cyan-400/30 px-3 py-1 rounded-full text-xs">Category: {product.productCategory}</span>
+                        <span className="bg-cyan-200/30 px-3 py-1 rounded-full text-xs">Stocks: {product.stocks}</span>
+                        {product.color && <span className="bg-blue-400/30 px-3 py-1 rounded-full text-xs">Color: {product.color}</span>}
+                        {product.usp && <span className="bg-blue-200/30 px-3 py-1 rounded-full text-xs">USP: {product.usp}</span>}
+                      </div>
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      <motion.button
+                        whileHover={{ scale: 1.1, backgroundColor: '#22d3ee', color: '#fff' }}
+                        whileTap={{ scale: 0.95 }}
+                        className="px-4 py-2 rounded-xl font-bold text-cyan-200 border-2 border-cyan-400 bg-[#232946] shadow-lg transition-all duration-200"
+                        onClick={() => handleEditProduct(product)}
+                      >
+                        <FontAwesomeIcon icon={faEdit} className="mr-2" />
+                        Edit
+                      </motion.button>
+                      <motion.button
+                        whileHover={{ scale: 1.1, backgroundColor: '#ef4444', color: '#fff' }}
+                        whileTap={{ scale: 0.95 }}
+                        className="px-4 py-2 rounded-xl font-bold text-red-300 border-2 border-red-400 bg-[#232946] shadow-lg transition-all duration-200"
+                        disabled={deleting === product._id}
+                        onClick={() => handleDelete(product._id)}
+                      >
+                        {deleting === product._id ? 'Deleting...' : 'Delete'}
+                      </motion.button>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            )}
+          </motion.div>
         </div>
       </main>
+
+      {/* Edit Product Modal */}
+      <AnimatePresence>
+        {showEditModal && (
+          <motion.div
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <motion.div
+              className="bg-[#1a2236] rounded-2xl p-8 max-w-md w-full border border-cyan-400/20 shadow-2xl"
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+            >
+              <div className="flex justify-between items-center mb-6">
+                <h3 className="text-xl font-bold text-cyan-200">Edit Product</h3>
+                <button
+                  onClick={handleCancelEdit}
+                  className="text-white/60 hover:text-white transition-colors"
+                >
+                  <FontAwesomeIcon icon={faTimes} />
+                </button>
+              </div>
+
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-cyan-200 text-sm font-medium mb-2">Product Name</label>
+                  <input
+                    type="text"
+                    value={editForm.productName || ''}
+                    onChange={(e) => handleEditFormChange('productName', e.target.value)}
+                    className="w-full px-4 py-2 bg-[#232946] border border-cyan-400/20 rounded-xl text-white focus:outline-none focus:border-cyan-400"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-cyan-200 text-sm font-medium mb-2">Description</label>
+                  <textarea
+                    value={editForm.description || ''}
+                    onChange={(e) => handleEditFormChange('description', e.target.value)}
+                    rows="3"
+                    className="w-full px-4 py-2 bg-[#232946] border border-cyan-400/20 rounded-xl text-white focus:outline-none focus:border-cyan-400"
+                  />
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-cyan-200 text-sm font-medium mb-2">Category</label>
+                    <input
+                      type="text"
+                      value={editForm.productCategory || ''}
+                      onChange={(e) => handleEditFormChange('productCategory', e.target.value)}
+                      className="w-full px-4 py-2 bg-[#232946] border border-cyan-400/20 rounded-xl text-white focus:outline-none focus:border-cyan-400"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-cyan-200 text-sm font-medium mb-2">Stocks</label>
+                    <input
+                      type="number"
+                      value={editForm.stocks || ''}
+                      onChange={(e) => handleEditFormChange('stocks', parseInt(e.target.value))}
+                      className="w-full px-4 py-2 bg-[#232946] border border-cyan-400/20 rounded-xl text-white focus:outline-none focus:border-cyan-400"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-cyan-200 text-sm font-medium mb-2">Color</label>
+                    <input
+                      type="text"
+                      value={editForm.color || ''}
+                      onChange={(e) => handleEditFormChange('color', e.target.value)}
+                      className="w-full px-4 py-2 bg-[#232946] border border-cyan-400/20 rounded-xl text-white focus:outline-none focus:border-cyan-400"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-cyan-200 text-sm font-medium mb-2">USP</label>
+                    <input
+                      type="text"
+                      value={editForm.usp || ''}
+                      onChange={(e) => handleEditFormChange('usp', e.target.value)}
+                      className="w-full px-4 py-2 bg-[#232946] border border-cyan-400/20 rounded-xl text-white focus:outline-none focus:border-cyan-400"
+                    />
+                  </div>
+                </div>
+
+                <div className="flex gap-4 pt-4">
+                  <button
+                    onClick={handleCancelEdit}
+                    className="flex-1 px-4 py-2 border border-cyan-400/20 text-cyan-200 rounded-xl hover:bg-cyan-400/10 transition-colors"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={handleSaveEdit}
+                    disabled={saving}
+                    className="flex-1 px-4 py-2 bg-cyan-400 text-white rounded-xl hover:bg-cyan-500 transition-colors disabled:opacity-50"
+                  >
+                    {saving ? 'Saving...' : 'Save Changes'}
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
