@@ -6,22 +6,12 @@ import { GoogleLogin, GoogleOAuthProvider } from '@react-oauth/google';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 
-const backendUrl = import.meta.env.VITE_BACKEND_URL;
-const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
-console.log('DEBUG: VITE_BACKEND_URL =', backendUrl);
-console.log('DEBUG: VITE_GOOGLE_CLIENT_ID =', googleClientId);
+// Use environment variable or fallback to your Render URL
+const backendUrl = import.meta.env.VITE_BACKEND_URL || 'https://s85-vansh-capstone-smartpicks.onrender.com';
+const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID || 'your-google-client-id.apps.googleusercontent.com';
 
-if (!backendUrl || !googleClientId) {
-  return (
-    <div style={{color: 'red', fontWeight: 'bold', padding: 40}}>
-      ERROR: VITE_BACKEND_URL or VITE_GOOGLE_CLIENT_ID is not set.<br/>
-      backendUrl: {String(backendUrl)}<br/>
-      googleClientId: {String(googleClientId)}<br/>
-      Please check your .env file and Netlify environment variables.<br/>
-      (This message is visible in production if the build is missing these variables.)
-    </div>
-  );
-}
+console.log('DEBUG: VITE_BACKEND_URL =', import.meta.env.VITE_BACKEND_URL);
+console.log('DEBUG: Using backendUrl =', backendUrl);
 
 const LoginStartup = () => {
   const { register, handleSubmit, formState: { errors }, setError } = useForm();

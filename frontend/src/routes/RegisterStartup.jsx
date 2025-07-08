@@ -5,6 +5,14 @@ import { motion } from 'framer-motion';
 import { FaRocket } from 'react-icons/fa';
 import Navbar from '../components/Navbar';
 
+// Use environment variables or fallbacks
+const backendUrl = import.meta.env.VITE_BACKEND_URL || 'https://s85-vansh-capstone-smartpicks.onrender.com';
+const cloudinaryCloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME || 'your-cloudinary-cloud-name';
+const cloudinaryUploadPreset = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET || 'your-upload-preset';
+
+console.log('DEBUG: VITE_BACKEND_URL =', import.meta.env.VITE_BACKEND_URL);
+console.log('DEBUG: Using backendUrl =', backendUrl);
+
 const RegisterStartup = () => {
   const {
     register,
@@ -13,26 +21,6 @@ const RegisterStartup = () => {
     setError,
     reset,
   } = useForm();
-
-  const backendUrl = import.meta.env.VITE_BACKEND_URL;
-  const cloudinaryCloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
-  const cloudinaryUploadPreset = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
-  console.log('DEBUG: VITE_BACKEND_URL =', backendUrl);
-  console.log('DEBUG: VITE_CLOUDINARY_CLOUD_NAME =', cloudinaryCloudName);
-  console.log('DEBUG: VITE_CLOUDINARY_UPLOAD_PRESET =', cloudinaryUploadPreset);
-
-  if (!backendUrl || !cloudinaryCloudName || !cloudinaryUploadPreset) {
-    return (
-      <div style={{color: 'red', fontWeight: 'bold', padding: 40}}>
-        ERROR: One or more required environment variables are not set.<br/>
-        backendUrl: {String(backendUrl)}<br/>
-        cloudinaryCloudName: {String(cloudinaryCloudName)}<br/>
-        cloudinaryUploadPreset: {String(cloudinaryUploadPreset)}<br/>
-        Please check your .env file and Netlify environment variables.<br/>
-        (This message is visible in production if the build is missing these variables.)
-      </div>
-    );
-  }
 
   const onSubmit = async (data) => {
     try {
@@ -61,7 +49,7 @@ const RegisterStartup = () => {
       const response = await axios.post(
         `${backendUrl}/startups/register`,
         startupData,
-        { headers: { } }
+        { headers: { } } // Explicitly send no Authorization header
       );
 
       // Save token for later use (e.g., localStorage or context)
